@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Loosh Farm Tycoon – WASM</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      canvas {
+        display: block;
+        margin: 0 auto;
+      }
+
+      .canvas-container {
+        flex: 1 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .controls-footer {
+        flex: 0 0 auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        padding: 0.5rem 0.75rem;
+        background: #111;
+        border-top: 1px solid #222;
+        font-family: monospace;
+      }
+
+      .controls-footer button {
+        min-width: 4ch;
+        padding: 0.25rem 0;
+        background: #222;
+        color: #fff;
+        border: 1px solid #555;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 1rem;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .controls-footer button:hover,
+      .controls-footer button:focus {
+        background: #333;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="canvas-container">
+      <canvas id="canvas" width="640" height="640"></canvas>
+    </div>
+    <footer class="controls-footer">
+      <button id="speed-up" type="button" aria-label="Speed up (same as W)">&gt;&gt;&gt;&gt;</button>
+      <button id="slow-down" type="button" aria-label="Slow down (same as A)">&lt;&lt;&lt;&lt;</button>
+      <button
+        id="toggle-legend"
+        type="button"
+        aria-label="Toggle legend (same as I)"
+      >
+        [ i ]
+      </button>
+      <button
+        id="toggle-cultures"
+        type="button"
+        aria-label="Toggle culture overlay (same as C)"
+      >
+        [ c ]
+      </button>
+      <button
+        id="toggle-relations"
+        type="button"
+        aria-label="Toggle relations overlay (same as R)"
+      >
+        [ r ]
+      </button>
+      <button
+        id="toggle-settlements"
+        type="button"
+        aria-label="Toggle settlements overlay (same as S)"
+      >
+        [ s ]
+      </button>
+      <button
+        id="toggle-log"
+        type="button"
+        aria-label="Toggle event log (same as ~)"
+      >
+        [ ~ ]
+      </button>
+      <button
+        id="toggle-controls"
+        type="button"
+        aria-label="Toggle controls overlay (same as ?)"
+      >
+        [ ? ]
+      </button>
+    </footer>
+    <script src="./loosh_farm_tycoon.js"></script>
+    <script>
+      function dispatchKeySequence(key, code, keyCode) {
+        const eventInit = {
+          key,
+          code,
+          keyCode,
+          which: keyCode,
+          charCode: keyCode,
+          bubbles: true,
+        };
+
+        window.dispatchEvent(new KeyboardEvent("keydown", eventInit));
+        window.dispatchEvent(new KeyboardEvent("keyup", eventInit));
+      }
+
+      window.addEventListener("load", async () => {
+        await wasm_bindgen("./loosh_farm_tycoon_bg.wasm");
+
+        const speedUpButton = document.getElementById("speed-up");
+        const slowDownButton = document.getElementById("slow-down");
+        const legendButton = document.getElementById("toggle-legend");
+        const culturesButton = document.getElementById("toggle-cultures");
+        const relationsButton = document.getElementById("toggle-relations");
+        const settlementsButton = document.getElementById("toggle-settlements");
+        const logButton = document.getElementById("toggle-log");
+        const controlsButton = document.getElementById("toggle-controls");
+
+        speedUpButton?.addEventListener("click", () =>
+          dispatchKeySequence("w", "KeyW", 87)
+        );
+
+        slowDownButton?.addEventListener("click", () =>
+          dispatchKeySequence("a", "KeyA", 65)
+        );
+
+        legendButton?.addEventListener("click", () =>
+          dispatchKeySequence("i", "KeyI", 73)
+        );
+
+        culturesButton?.addEventListener("click", () =>
+          dispatchKeySequence("c", "KeyC", 67)
+        );
+
+        relationsButton?.addEventListener("click", () =>
+          dispatchKeySequence("r", "KeyR", 82)
+        );
+
+        settlementsButton?.addEventListener("click", () =>
+          dispatchKeySequence("s", "KeyS", 83)
+        );
+
+        logButton?.addEventListener("click", () =>
+          dispatchKeySequence("~", "Backquote", 192)
+        );
+
+        controlsButton?.addEventListener("click", () =>
+          dispatchKeySequence("?", "Slash", 191)
+        );
+      });
+    </script>
+  </body>
+</html>
